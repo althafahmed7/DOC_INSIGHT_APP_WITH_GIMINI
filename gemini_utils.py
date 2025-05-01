@@ -23,13 +23,10 @@ Return your response as JSON in this format:
 
     try:
         model = genai.GenerativeModel("gemini-pro")
-        response = model.generate_content(
-            [system_prompt, text],
-            request_options={"timeout": 30}  # ✅ Correct placement
-        )
+        response = model.generate_content([system_prompt, text])
         return response.text
 
     except google_exceptions.DeadlineExceeded:
-        return '{"error": "⏱️ Gemini API timed out. Please try with a smaller or simpler file."}'
+        return '{"error": "⏱️ Gemini API timed out. Please try again later."}'
     except Exception as e:
         return f'{{"error": "❌ Gemini API failed: {str(e)}"}}'
