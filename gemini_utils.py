@@ -1,6 +1,7 @@
 import os
 import google.generativeai as genai
 from dotenv import load_dotenv
+import google.api_core.exceptions as google_exceptions
 
 load_dotenv()
 api_key = os.getenv("GEMINI_API_KEY")
@@ -20,6 +21,15 @@ Return your response as JSON in this format:
 }
 """
 
-    model = genai.GenerativeModel("gemini-pro")
-    response = model.generate_content([system_prompt, text])
-    return response.text
+    try:
+        model = genai.GenerativeModel("gemini-pro")
+        response = model.generate_content(
+            [system_prompt, text],
+            generation_config={"timeout": 30}  # set lower timeout
+        )
+        return response.text
+
+    except google_exceptions.DeadlineExceeded:
+        return '{"error": "⏱️ Gemini API timed out. Please try with a smaller or simpler file."}'
+    except Exception as e:
+        return f'{{"error": "❌ Gemini API failed: {str(e)}"}}'
