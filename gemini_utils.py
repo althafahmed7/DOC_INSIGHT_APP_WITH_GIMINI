@@ -25,7 +25,7 @@ Return your response as JSON in this format:
         model = genai.GenerativeModel("gemini-pro")
         response = model.generate_content(
             [system_prompt, text],
-            generation_config={"timeout": 30}  # set lower timeout
+            request_options={"timeout": 30}  # ✅ Correct placement
         )
         return response.text
 
